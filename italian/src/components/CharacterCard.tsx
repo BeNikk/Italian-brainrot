@@ -87,8 +87,8 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
     >
       <div className={`
         relative overflow-hidden rounded-xl border-4
-        ${position === 'left' ? 'border-neon-pink' : 'border-neon-blue'}
-        ${isWinner === true ? 'shadow-neon-yellow' : ''}
+        ${position === 'left' ? 'border-[##ff00ff]' : 'border-[#00ffff]'}
+        ${isWinner === true ? 'shadow-[#ffff00]' : ''}
         ${isSelectable ? 'shadow-lg hover:shadow-xl' : ''}
         transform transition-all duration-300
       `}>
