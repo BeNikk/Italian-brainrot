@@ -87,7 +87,7 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
     >
       <div className={`
         relative overflow-hidden rounded-xl border-4
-        ${position === 'left' ? 'border-[##ff00ff]' : 'border-[#00ffff]'}
+        ${position === 'left' ? 'border-[#ff00ff]' : 'border-[#00ffff]'}
         ${isWinner === true ? 'shadow-[#ffff00]' : ''}
         ${isSelectable ? 'shadow-lg hover:shadow-xl' : ''}
         transform transition-all duration-300
@@ -134,7 +134,7 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
-            <div className="bg-neon-yellow text-black text-2xl sm:text-4xl font-bold px-3 sm:px-4 py-1 sm:py-2 rounded-full transform -rotate-12 shadow-neon-yellow">
+            <div className="bg-[#ffff00] text-black text-2xl sm:text-4xl font-bold px-3 sm:px-4 py-1 sm:py-2 rounded-full transform -rotate-12 shadow-neon-yellow">
               VS
             </div>
           </motion.div>
@@ -143,7 +143,7 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
         {/* Selection indicator */}
         {isSelectable && (
           <motion.div
-            className="absolute inset-0 bg-neon-yellow opacity-0 hover:opacity-20 transition-opacity rounded-xl"
+            className="absolute inset-0 bg-[#ffff00] opacity-0 hover:opacity-20 transition-opacity rounded-xl"
             whileHover={{ scale: 1.02 }}
           />
         )}
