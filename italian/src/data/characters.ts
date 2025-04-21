@@ -37,7 +37,7 @@ export const characters: Character[] = [
   {
     id: 5,
     name: "Garamaraman dan Garamamaraman",
-    powerLevel: 87,
+    powerLevel: 80,
     image: "https://i.namu.wiki/i/01TdabI-F1W2mG6xKg1fnlYZE44miohrdDc08qAgwf64UDjbBEh_1Ot-oKV3dXn8Utlr-cxkG6t7GJUkO-e9ArzHjIoJMzKc9uBWRzFvrmgBpOVTSra6pI5TgUNTSReREdMZpBWQL6FsuLZ6tZ0wzVVujRMYKlb9CUsqGpy_JUw.webp",
     audio: "/garamaraman.mp3",
     description: "It is a character that synthesizes a person's face and feet in the salt and honey complex. The name of the salt barrel is karamarahman, and the honey barrel is Madungdong. It is said to appear mainly during the period of Ramadan ."
