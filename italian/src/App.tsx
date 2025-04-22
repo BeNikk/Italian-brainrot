@@ -64,101 +64,102 @@ function App() {
 
   const handleRightReveal = useCallback(() => {
     const { left, right } = gameState.characters;
-
+  
     if (!left || !right) return;
-
-    // Play the left character's sound first
+  
+    // Stop any currently playing audio
+    Howler.stop();
+  
+    // Play the left character's sound
     const leftSound = new Howl({
       src: [left.audio],
       html5: true,
       preload: true,
-      onend: () => {
-        // Once the left character's sound finishes, play the "vs" sound
-        const vsSound = new Howl({
-          src: [soundEffects.vs],
+    });
+  
+    // Play the "vs" sound after the left character's sound ends
+    leftSound.on('end', () => {
+      const vsSound = new Howl({
+        src: [soundEffects.vs],
+        html5: true,
+        preload: true,
+      });
+  
+      // Play the right character's sound after the "vs" sound ends
+      vsSound.on('end', () => {
+        const rightSound = new Howl({
+          src: [right.audio],
           html5: true,
           preload: true,
-          onend: () => {
-            // Once the "vs" sound finishes, play the right character's sound
-            const rightSound = new Howl({
-              src: [right.audio],
-              html5: true,
-              preload: true,
-              onend: () => {
-                // Enable choice after the right character's sound finishes
-                setGameState(prev => ({
-                  ...prev,
-                  stage: 'choice',
-                }));
-              },
-            });
-            rightSound.play();
-          },
         });
-        vsSound.play();
-      },
+        rightSound.play();
+      });
+  
+      vsSound.play();
     });
+  
     leftSound.play();
-
-    // Update the game state to indicate the right character is being revealed
+  
+    // Immediately transition to the "choice" stage
     setGameState(prev => ({
       ...prev,
-      stage: 'rightReveal',
+      stage: 'choice',
     }));
   }, [gameState.characters]);
-
-  // Handle player selection (left or right)
-  const handleSelection = useCallback((selection: 'left' | 'right') => {
-    const { left, right } = gameState.characters;
-
-    if (!left || !right || gameState.stage !== 'choice') return;
-
-    const leftStronger = left.powerLevel > right.powerLevel;
-    const correctChoice =
-      (selection === 'left' && leftStronger) ||
-      (selection === 'right' && !leftStronger);
-
-    if (correctChoice) {
-      // Correct choice
-      play(soundEffects.correct);
-
-      const newCorrectAnswers = gameState.correctAnswers + 1;
-      const isVictory = newCorrectAnswers >= MAX_ROUNDS;
-      const champion = leftStronger ? left : right;
-
-      setGameState(prev => ({
-        ...prev,
-        correctAnswers: newCorrectAnswers,
-        stage: 'result',
-        message: 'CORRECT!',
-        isVictory,
-        isGameOver: isVictory,
-      }));
-
-      // If not victory, set up next round with the champion
-      if (!isVictory) {
+  
+  const handleSelection = useCallback(
+    (selection: 'left' | 'right') => {
+      const { left, right } = gameState.characters;
+  
+      if (!left || !right || gameState.stage !== 'choice') return;
+  
+      const leftStronger = left.powerLevel > right.powerLevel;
+      const correctChoice =
+        (selection === 'left' && leftStronger) ||
+        (selection === 'right' && !leftStronger);
+  
+      if (correctChoice) {
+        // Correct choice
+        play(soundEffects.correct);
+  
+        const newCorrectAnswers = gameState.correctAnswers + 1;
+        const isVictory = newCorrectAnswers >= MAX_ROUNDS;
+        const champion = leftStronger ? left : right;
+  
+        setGameState(prev => ({
+          ...prev,
+          correctAnswers: newCorrectAnswers,
+          stage: 'result',
+          message: 'CORRECT!',
+          isVictory,
+          isGameOver: isVictory,
+        }));
+  
+        // If not victory, set up the next round with the champion
+        if (!isVictory) {
+          setTimeout(() => {
+            startNewRound(champion);
+          }, 1000); // Short delay before starting the next round
+        }
+      } else {
+        // Wrong choice
+        play(soundEffects.wrong);
+  
+        setGameState(prev => ({
+          ...prev,
+          stage: 'result',
+          message: 'WRONG!',
+          isGameOver: true,
+        }));
+  
+        // Play game over sound after a delay
         setTimeout(() => {
-          startNewRound(champion);
-        }, 2500);
+          play(soundEffects.gameOver);
+        }, 1000);
       }
-    } else {
-      // Wrong choice
-      play(soundEffects.wrong);
-
-      setGameState(prev => ({
-        ...prev,
-        stage: 'result',
-        message: 'WRONG!',
-        isGameOver: true,
-      }));
-
-      // Play game over sound after a delay
-      setTimeout(() => {
-        play(soundEffects.gameOver);
-      }, 1000);
-    }
-  }, [gameState.characters, gameState.stage, gameState.correctAnswers, play, startNewRound]);
-
+    },
+    [gameState.characters, gameState.stage, gameState.correctAnswers, play, startNewRound]
+  );
   // Restart the game
   const restartGame = useCallback(() => {
     setUsedCharacterIds([]);
